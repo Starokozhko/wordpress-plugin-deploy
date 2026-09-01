@@ -1,0 +1,120 @@
+name: Staging Plugin Dry Run
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging-plugin-deployment
+  cancel-in-progress: false
+
+jobs:
+
+  dry-run:
+
+    name: Check plugin deployment
+    runs-on: ubuntu-latest
+    environment: staging
+
+    env:
+      REMOTE_DIR: /tmp/gwaramedia-plugin-deploy-${{ github.run_id }}
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Configure SSH
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+
+      - name: Create temporary deployment directory
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -p "$SSH_PORT" \
+            "$SSH_USER@$SSH_HOST" \
+            "mkdir -p '$REMOTE_DIR'"
+
+
+      - name: Upload deployment files
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          scp \
+            -i ~/.ssh/deploy_key \
+            -P "$SSH_PORT" \
+            -r \
+            manifests \
+            scripts \
+            "$SSH_USER@$SSH_HOST:$REMOTE_DIR/"
+
+
+      - name: Run staging preflight
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          WP_PATH: ${{ vars.WP_PATH }}
+          EXPECTED_SITE_URL: ${{ vars.EXPECTED_SITE_URL }}
+        run: |
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -p "$SSH_PORT" \
+            "$SSH_USER@$SSH_HOST" \
+            "WP_PATH='$WP_PATH' EXPECTED_SITE_URL='$EXPECTED_SITE_URL' bash '$REMOTE_DIR/scripts/preflight.sh'"
+
+
+      - name: Run plugin deployment dry run
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          WP_PATH: ${{ vars.WP_PATH }}
+          EXPECTED_SITE_URL: ${{ vars.EXPECTED_SITE_URL }}
+        run: |
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -p "$SSH_PORT" \
+            "$SSH_USER@$SSH_HOST" \
+            "WP_PATH='$WP_PATH' EXPECTED_SITE_URL='$EXPECTED_SITE_URL' bash '$REMOTE_DIR/scripts/deploy.sh'"
+
+
+      - name: Cleanup
+        if: always()
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -p "$SSH_PORT" \
+            "$SSH_USER@$SSH_HOST" \
+            "rm -rf '$REMOTE_DIR'" || true
