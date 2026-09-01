@@ -49,3 +49,16 @@ Plugin binaries are never stored in this public repository.
 
 External plugin ZIP files must be downloaded from trusted official sources
 and stored outside the public web root of the WordPress server.
+
+## Staging deployment
+
+`Staging Plugin Dry Run` validates the deployment plan without modifying
+WordPress.
+
+`Staging WordPress.org Plugin Deployment` is a manually triggered workflow.
+It requires explicit confirmation, reruns the preflight and dry-run checks,
+then installs only the plugins listed in the WordPress.org manifests. It
+verifies plugin checksums and expected active/inactive states after installation.
+
+External and manually managed plugins, including Paid Memberships Pro, are not
+installed or modified by the WordPress.org deployment workflow.
