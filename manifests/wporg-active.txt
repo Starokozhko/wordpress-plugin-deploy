@@ -1,0 +1,6 @@
+# WordPress.org plugins that must be installed and ACTIVE.
+# One plugin slug per line.
+#
+# Example:
+# classic-editor
+# redirection

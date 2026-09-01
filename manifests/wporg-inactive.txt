@@ -1,0 +1,5 @@
+# WordPress.org plugins that must be installed but INACTIVE.
+# One plugin slug per line.
+#
+# Example:
+# query-monitor

@@ -1,0 +1,4 @@
+# External / Premium / Custom plugins that must be installed but INACTIVE.
+#
+# Format:
+# plugin-folder|zip-file

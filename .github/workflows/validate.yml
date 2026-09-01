@@ -1,0 +1,29 @@
+name: Validate Plugin Manifests
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+
+  validate:
+
+    name: Validate manifests
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate plugin manifests
+        run: bash scripts/validate.sh
