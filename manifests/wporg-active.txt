@@ -1,6 +1,40 @@
 # WordPress.org plugins that must be installed and ACTIVE.
-# One plugin slug per line.
-#
-# Example:
-# classic-editor
-# redirection
+# One WordPress.org repository slug per line.
+
+add-to-any
+akismet
+autoptimize
+bing-webmaster-tools
+breadcrumb-navxt
+bulk-term-editor
+taxonomy-terms-order
+classic-editor
+cloudflare
+webp-converter-for-media
+cyr2lat
+claim-review-schema
+gdpr-cookie-compliance
+header-footer-code-manager
+missed-scheduled-posts-publisher
+nextend-facebook-connect
+paid-memberships-pro
+publishpress-authors
+capability-manager-enhanced
+redirection
+sendpulse-email-marketing-newsletter
+custom-facebook-feed
+instagram-feed
+svg-support
+simple-tags
+updraftplus
+web-stories
+webflow-pages
+webp-express
+wp-crontrol
+wp-external-links
+wp-linkedin-auto-publish
+wp-mail-smtp
+wp-optimize
+wpforms-lite
+xml-sitemap-feed
+wordpress-seo

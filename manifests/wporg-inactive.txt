@@ -1,5 +1,17 @@
-# WordPress.org plugins that must be installed but INACTIVE.
-# One plugin slug per line.
-#
-# Example:
-# query-monitor
+# WordPress.org plugins that must be installed but kept INACTIVE.
+# One WordPress.org repository slug per line.
+
+better-search-replace
+custom-post-type-ui
+easy-watermark
+ewww-image-optimizer
+feedzy-rss-feeds
+gn-publisher
+maintenance
+wp-user-avatar
+query-monitor
+really-simple-ssl
+redis-cache
+w3-total-cache
+wp-migrate-db
+zapier

@@ -1,7 +1,12 @@
-# External / Premium / Custom plugins that must be installed and ACTIVE.
+# External / Premium / Vendor plugins that must be ACTIVE.
 #
-# Format:
+# Do NOT add download URLs, license keys or secrets here.
+#
+# Final format will be:
 # plugin-folder|zip-file
-#
-# Example:
-# advanced-custom-fields-pro|advanced-custom-fields-pro.zip
+
+# Advanced Custom Fields PRO
+# Perfmatters
+# WPML Multilingual CMS
+# WPML String Translation
+# YITH Infinite Scrolling Premium
