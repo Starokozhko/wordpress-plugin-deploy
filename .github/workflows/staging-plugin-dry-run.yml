@@ -19,7 +19,7 @@ jobs:
     environment: staging
 
     env:
-      REMOTE_DIR: /tmp/gwaramedia-plugin-deploy-${{ github.run_id }}
+      REMOTE_DIR: /tmp/gwaramedia-plugin-deploy-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
 

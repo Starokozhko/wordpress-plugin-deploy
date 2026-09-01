@@ -29,9 +29,23 @@ read_manifest() {
 
     sed \
         -e 's/\r$//' \
+        -e 's/^[[:space:]]*//' \
         -e 's/[[:space:]]*$//' \
         "$file" |
         grep -vE '^[[:space:]]*(#|$)' || true
+}
+
+
+find_duplicates() {
+
+    local file="$1"
+
+    read_manifest "$file" |
+        awk '
+            ++seen[$0] == 2 {
+                print $0
+            }
+        '
 }
 
 
@@ -75,16 +89,53 @@ echo "OK"
 
 
 #
-# DUPLICATES
+# MANIFEST CONSISTENCY
 #
 
 echo
-echo "[2/6] Checking active/inactive conflicts"
+echo "[2/6] Checking manifest duplicates and active/inactive conflicts"
+
+WPORG_ACTIVE_DUPLICATES="$(find_duplicates "$WPORG_ACTIVE")"
+WPORG_INACTIVE_DUPLICATES="$(find_duplicates "$WPORG_INACTIVE")"
+MANIFEST_ERRORS=0
+
+if [[ -n "$WPORG_ACTIVE_DUPLICATES" ]]; then
+
+    while IFS= read -r plugin; do
+        echo "ERROR: duplicate entry $plugin in wporg-active.txt"
+    done <<< "$WPORG_ACTIVE_DUPLICATES"
+
+    MANIFEST_ERRORS=1
+
+fi
+
+if [[ -n "$WPORG_INACTIVE_DUPLICATES" ]]; then
+
+    while IFS= read -r plugin; do
+        echo "ERROR: duplicate entry $plugin in wporg-inactive.txt"
+    done <<< "$WPORG_INACTIVE_DUPLICATES"
+
+    MANIFEST_ERRORS=1
+
+fi
+
+if [[ "$MANIFEST_ERRORS" -gt 0 ]]; then
+    exit 1
+fi
 
 WPORG_DUPLICATES="$(
-    comm -12 \
-        <(read_manifest "$WPORG_ACTIVE" | sort -u) \
-        <(read_manifest "$WPORG_INACTIVE" | sort -u)
+    awk '
+        FILENAME == ARGV[1] {
+            active[$0] = 1
+            next
+        }
+
+        $0 in active && !reported[$0]++ {
+            print $0
+        }
+    ' \
+        <(read_manifest "$WPORG_ACTIVE") \
+        <(read_manifest "$WPORG_INACTIVE")
 )"
 
 if [[ -n "$WPORG_DUPLICATES" ]]; then

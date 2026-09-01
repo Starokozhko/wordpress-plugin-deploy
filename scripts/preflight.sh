@@ -98,10 +98,10 @@ if [[ ! -d "$PLUGIN_DIR" ]]; then
     exit 1
 fi
 
-TEST_FILE="${PLUGIN_DIR}/.github-actions-write-test"
-
-touch "$TEST_FILE"
-rm "$TEST_FILE"
+if [[ ! -w "$PLUGIN_DIR" ]]; then
+    echo "ERROR: Plugin directory is not writable."
+    exit 1
+fi
 
 echo "OK"
 
