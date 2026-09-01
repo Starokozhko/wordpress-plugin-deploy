@@ -17,7 +17,6 @@ gdpr-cookie-compliance
 header-footer-code-manager
 missed-scheduled-posts-publisher
 nextend-facebook-connect
-paid-memberships-pro
 publishpress-authors
 capability-manager-enhanced
 redirection

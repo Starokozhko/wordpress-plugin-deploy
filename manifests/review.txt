@@ -11,6 +11,7 @@ ACTIVE | Error Notification | Exact official source must be identified
 ACTIVE | KUB-X Pagination | Appears custom/private; exact source required
 ACTIVE | LiqPay Gateway for Paid Memberships Pro | Exact official/vendor package required
 ACTIVE | oneTap | Exact plugin identity/version should be confirmed
+ACTIVE | Paid Memberships Pro | Install manually from the official vendor source; not managed by WordPress.org deployment
 
 ACTIVE | Paid Memberships Pro - Cancel on Next Payment Date | Deprecated standalone addon; functionality exists in PMPro 3+
 ACTIVE | Paid Memberships Pro - Slack Integration | Official PMPro addon; vendor ZIP required
